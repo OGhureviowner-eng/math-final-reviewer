@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UB Math Academy — MATH 1201 & 1151</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2f45;
+    --navy-light: #243d56;
+    --gold: #c9a84c;
+    --gold-light: #e2c47a;
+    --gold-pale: #f5e9c8;
+    --cream: #faf8f3;
+    --cream-dark: #f0ece0;
+    --text-main: #1c1a16;
+    --text-muted: #5c574a;
+    --text-light: #9b9487;
+    --border: #e0d8c8;
+    --border-dark: #c8bfa8;
+    --trig-accent: #2a5c8a;
+    --alg-accent: #5c2a6b;
+    --success: #2d6a4f;
+    --success-bg: #d8f3dc;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-main);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  /* ─── LAYOUT ──────────────────────────────── */
+  .app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--navy);
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Crimson Pro', serif;
+    font-weight: 300;
+  }
+
+  .course-tabs {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.08);
+    padding: 4px;
+    border-radius: var(--radius);
+  }
+
+  .course-tab {
+    padding: 6px 16px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: all 0.2s;
+    color: rgba(255,255,255,0.65);
+    background: transparent;
+  }
+
+  .course-tab.active {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .course-tab.trig.active { background: var(--gold); }
+  .course-tab.alg.active { background: #c084e8; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Crimson Pro', serif;
+  }
+
+  /* ─── MAIN CONTENT ──────────────────────────── */
+  .main-wrap {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ─── SIDEBAR ──────────────────────────────── */
+  aside {
+    width: 280px;
+    min-width: 280px;
+    background: var(--navy-mid);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-bottom: 2rem;
+  }
+
+  .sidebar-header {
+    padding: 1.25rem 1.25rem 0.75rem;
+    position: sticky;
+    top: 0;
+    background: var(--navy-mid);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 0.5rem;
+  }
+
+  .sidebar-course-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .topic-group { margin-bottom: 0.25rem; }
+
+  .topic-week {
+    padding: 0.4rem 1.25rem;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .topic-btn {
+    width: 100%;
+    padding: 0.55rem 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    line-height: 1.4;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    display: block;
+  }
+
+  .topic-btn:hover {
+    background: rgba(255,255,255,0.07);
+    color: #fff;
+  }
+
+  .topic-btn.active.trig {
+    background: rgba(201,168,76,0.15);
+    border-left-color: var(--gold);
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .topic-btn.active.alg {
+    background: rgba(192,132,232,0.15);
+    border-left-color: #c084e8;
+    color: #d4a0f0;
+    font-weight: 600;
+  }
+
+  /* ─── CONTENT AREA ─────────────────────────── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.5rem 2.5rem 3rem;
+    max-width: 860px;
+  }
+
+  .content-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .topic-badge.trig { background: #e8f4fd; color: var(--trig-accent); }
+  .topic-badge.alg { background: #f4e8fd; color: var(--alg-accent); }
+
+  .topic-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+
+  .topic-desc {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ─── SUBTOPICS ───────────────────────────── */
+  .subtopics-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .subtopic-chip {
+    padding: 4px 12px;
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Crimson Pro', serif;
+  }
+
+  .subtopic-chip:hover { border-color: var(--gold); color: var(--text-main); }
+  .subtopic-chip.selected { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
+
+  /* ─── DIFFICULTY ─────────────────────────── */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .difficulty-group {
+    display: flex;
+    gap: 4px;
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .diff-btn {
+    padding: 5px 14px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .diff-btn.active { background: #fff; color: var(--text-main); box-shadow: 0 1px 4px rgba(0,0,0,0.1); font-weight: 600; }
+
+  .generate-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+  }
+
+  .generate-btn:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .generate-btn:active { transform: translateY(0); }
+  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .generate-btn .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .generate-btn.loading .spinner { display: block; }
+  .generate-btn.loading .btn-icon { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── QUESTION CARD ──────────────────────── */
+  .question-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .qcard-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream-dark);
+  }
+
+  .qcard-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  .qcard-difficulty {
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-family: 'Crimson Pro', serif;
+    font-weight: 600;
+  }
+
+  .diff-easy { background: #d8f3dc; color: #1b4332; }
+  .diff-medium { background: #fff3cd; color: #664d03; }
+  .diff-hard { background: #fde8e8; color: #7b1c1c; }
+
+  .qcard-body { padding: 1.5rem; }
+
+  .question-text {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+  }
+
+  .question-text .math {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    background: var(--cream-dark);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--navy);
+  }
+
+  .hint-box {
+    background: #fef9ec;
+    border: 1px solid #f0d060;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 15px;
+    color: #7a5500;
+    margin-top: 0.75rem;
+  }
+
+  .hint-label {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 3px;
+  }
+
+  /* ─── SOLUTION ───────────────────────────── */
+  .solution-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .sol-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #0d1b2a, #1a2f45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sol-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .sol-body { padding: 1.5rem; }
+
+  .step-block {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 4px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .step-text {
+    font-size: 16px;
+    color: var(--text-main);
+    line-height: 1.6;
+  }
+
+  .math-block {
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    margin: 0.5rem 0;
+    color: var(--navy);
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .answer-box {
+    background: var(--navy);
+    color: #fff;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .answer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .answer-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* ─── SHOW SOLUTION BTN ────────────────── */
+  .show-sol-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .show-sol-btn:hover { background: var(--navy); color: #fff; }
+  .show-sol-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ─── STREAMING ──────────────────────── */
+  .streaming-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 1rem 0;
+  }
+
+  .dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .dots span {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: dotpulse 1.2s ease-in-out infinite;
+  }
+
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotpulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ─── WELCOME STATE ──────────────────── */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .welcome-icon {
+    font-size: 56px;
+    margin-bottom: 1.25rem;
+    opacity: 0.4;
+    font-family: 'Playfair Display', serif;
+    color: var(--navy);
+  }
+
+  .welcome h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .welcome p { font-size: 16px; max-width: 380px; line-height: 1.6; }
+
+  /* ─── SCROLLBAR ────────────────────── */
+  aside::-webkit-scrollbar { width: 4px; }
+  aside::-webkit-scrollbar-track { background: transparent; }
+  aside::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .content::-webkit-scrollbar { width: 5px; }
+  .content::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 4px; }
+
+  /* ─── FOOTER ─────────────────────── */
+  .streamed-text { white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: var(--text-main); }
+
+  .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+
+  .new-q-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .new-q-btn:hover { border-color: var(--gold); color: var(--text-main); }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">∑</div>
+    <div>
+      <div class="logo-text">UB Math Academy</div>
+      <div class="logo-sub">Faculty of Science & Technology</div>
+    </div>
+  </div>
+
+  <div class="course-tabs">
+    <button class="course-tab trig active" onclick="switchCourse('trig')">MATH 1201 — Trigonometry</button>
+    <button class="course-tab alg" onclick="switchCourse('alg')">MATH 1151 — Algebra</button>
+  </div>
+
+  <div class="header-right">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1a6 6 0 1 1 0 12A6 6 0 0 1 8 2zm-.5 3v3l3 1.8-.5.87L7 9V5h.5z"/></svg>
+    Semester 2025-2
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"></aside>
+
+  <!-- CONTENT -->
+  <div class="content" id="content">
+    <div class="welcome">
+      <div class="welcome-icon">∫</div>
+      <h2>Select a Topic to Begin</h2>
+      <p>Choose a topic from the sidebar to generate practice questions with full step-by-step solutions powered by AI.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const COURSES = {
+  trig: {
+    code: 'MATH 1201',
+    name: 'Trigonometry',
+    instructor: 'Ms. Adelia Young M.Sc., M.Ed.',
+    topics: [
+      {
+        week: 'Weeks 1–3', title: 'Angles & Their Measure',
+        desc: 'Types of angles, DMS notation, arc length, radian measure, and area of sector.',
+        subtopics: ['DMS Notation', 'Arc Length', 'Radian Measure', 'Area of Sector', 'Angle Conversion']
+      },
+      {
+        week: 'Weeks 2–3', title: 'Unit Circle & Trig Functions',
+        desc: 'The unit circle approach to defining trigonometric functions and computing exact values.',
+        subtopics: ['Unit Circle', 'Exact Values of sin/cos/tan', 'Special Angles (30°/45°/60°)', 'Reference Angles']
+      },
+      {
+        week: 'Week 4', title: 'Properties of Trig Functions',
+        desc: 'Domain, range, period, signs in quadrants, and fundamental identities.',
+        subtopics: ['Domain & Range', 'Period', 'Quadrant Signs', 'Fundamental Identities', 'Pythagorean Identities']
+      },
+      {
+        week: 'Weeks 5–6', title: 'Graphs of Trig Functions',
+        desc: 'Graphing sine, cosine, and other trig functions including translations.',
+        subtopics: ['Graph of Sine', 'Graph of Cosine', 'Amplitude & Period', 'Phase Shift', 'Graph of tan/cot/sec/csc']
+      },
+      {
+        week: 'Weeks 7–8', title: 'Inverse Trig Functions',
+        desc: 'Exact and approximate values of inverse trigonometric functions.',
+        subtopics: ['arcsin', 'arccos', 'arctan', 'Exact Inverse Values', 'Calculator Approximations']
+      },
+      {
+        week: 'Weeks 9–10', title: 'Trigonometric Identities',
+        desc: 'Algebraic techniques to simplify expressions and establish identities.',
+        subtopics: ['Simplifying Expressions', 'Establishing Identities', 'Reciprocal Identities', 'Co-function Identities']
+      },
+      {
+        week: 'Week 11', title: 'Sum & Difference Formulas',
+        desc: 'Exact values and identities using sum and difference formulas.',
+        subtopics: ['sin(A ± B)', 'cos(A ± B)', 'tan(A ± B)', 'Exact Values', 'Identities with Inverses']
+      },
+      {
+        week: 'Week 12', title: 'Double & Half-Angle Formulas',
+        desc: 'Applying double-angle and half-angle formulas to find exact values.',
+        subtopics: ['sin(2θ)', 'cos(2θ)', 'tan(2θ)', 'Half-Angle sin', 'Half-Angle cos']
+      },
+      {
+        week: 'Week 13', title: 'Trigonometric Equations',
+        desc: 'Solving trig equations — single function, quadratic form, and using identities.',
+        subtopics: ['Single Function Equations', 'Quadratic Form', 'Using Identities', 'General Solutions', 'Calculator Solutions']
+      },
+      {
+        week: 'Week 14', title: 'Right Triangle Trigonometry',
+        desc: 'Solving right triangles and applied problems using trig ratios.',
+        subtopics: ['SOH-CAH-TOA', 'Complementary Angle Theorem', 'Solving Right Triangles', 'Angle of Elevation/Depression']
+      },
+      {
+        week: 'Week 15', title: 'Non-Right Triangle Trigonometry',
+        desc: 'Law of Sines, Law of Cosines, and area of a triangle.',
+        subtopics: ['Law of Sines', 'Ambiguous Case (SSA)', 'Law of Cosines', 'Area of Triangle']
+      }
+    ]
+  },
+  alg: {
+    code: 'MATH 1151',
+    name: 'Algebra',
+    instructor: 'Jenny Olivas',
+    topics: [
+      {
+        week: 'Week 1', title: 'Indices & Logarithms',
+        desc: 'Laws of indices, introduction to logarithms, and scientific notation.',
+        subtopics: ['Laws of Indices', 'Negative & Zero Exponents', 'Logarithms (intro)', 'Scientific Notation']
+      },
+      {
+        week: 'Week 2', title: 'Surds & Radicals',
+        desc: 'nth roots, fractional exponents, simplifying radicals, and rationalizing denominators.',
+        subtopics: ['nth Roots', 'Fractional Exponents', 'Simplifying Radicals', 'Rationalizing Denominators']
+      },
+      {
+        week: 'Week 3', title: 'Polynomials',
+        desc: 'Degree, arithmetic operations, special products, long/synthetic division, and theorems.',
+        subtopics: ['Adding & Subtracting', 'Multiplying & FOIL', 'Long Division', 'Synthetic Division', 'Factor Theorem', 'Remainder Theorem']
+      },
+      {
+        week: 'Weeks 4–5', title: 'Factorization',
+        desc: 'HCF, grouping, difference/sum of cubes, and trinomial factoring.',
+        subtopics: ['HCF', 'Factor by Grouping', 'Difference of Squares', 'Sum & Difference of Cubes', 'Trinomials (a=1)', 'Trinomials (a≠1)', 'Double Factorization']
+      },
+      {
+        week: 'Week 6', title: 'Rational Expressions',
+        desc: 'Simplifying, multiplying, dividing, adding, subtracting, and complex fractions.',
+        subtopics: ['Simplify to Lowest Terms', 'Multiply & Divide', 'Add & Subtract', 'Complex Fractions']
+      },
+      {
+        week: 'Week 7', title: 'Partial Fraction Decomposition',
+        desc: 'Decompose rational expressions with linear and quadratic factors.',
+        subtopics: ['Nonrepeated Linear Factors', 'Repeated Linear Factors', 'Irreducible Quadratic Factors']
+      },
+      {
+        week: 'Weeks 8–9', title: 'Equations',
+        desc: 'Linear, quadratic, complex numbers, radical, and higher-order equations.',
+        subtopics: ['Linear Equations', 'Quadratic Equations', 'Discriminant', 'Absolute Value Equations', 'Radical Equations', 'Equations in Quadratic Form']
+      },
+      {
+        week: 'Week 10', title: 'Inequalities',
+        desc: 'Solving and graphing linear, quadratic, and absolute value inequalities.',
+        subtopics: ['Linear Inequalities', 'Quadratic Inequalities', 'Absolute Value Inequalities', 'Interval Notation']
+      },
+      {
+        week: 'Week 11', title: 'Simultaneous Equations',
+        desc: 'Systems of equations in two and three variables.',
+        subtopics: ['2-Variable Systems', '3-Variable Systems', 'Substitution Method', 'Elimination Method']
+      },
+      {
+        week: 'Week 12', title: 'Functions',
+        desc: 'Function properties, operations, and finding inverse functions.',
+        subtopics: ['Domain & Range', 'Function Notation', 'Operations on Functions', 'Inverse Functions', 'Proof of Inverses']
+      },
+      {
+        week: 'Weeks 13–14', title: 'Graphing Functions',
+        desc: 'Graphing linear, quadratic, absolute value, square root, polynomial, and rational functions.',
+        subtopics: ['Linear & Quadratic', 'Absolute Value', 'Square Root', 'Exponential', 'Polynomial', 'Rational Functions & Asymptotes']
+      },
+      {
+        week: 'Weeks 15–16', title: 'Conics & Piecewise',
+        desc: 'Circle, ellipse, hyperbola, and piecewise-defined functions.',
+        subtopics: ['Circle', 'Ellipse', 'Hyperbola', 'Piecewise Functions']
+      }
+    ]
+  }
+};
+
+let currentCourse = 'trig';
+let currentTopicIdx = null;
+let currentSubtopic = null;
+let currentDifficulty = 'medium';
+let currentQuestion = null;
+let loadingQ = false;
+let loadingS = false;
+
+function switchCourse(course) {
+  currentCourse = course;
+  currentTopicIdx = null;
+  currentSubtopic = null;
+  currentQuestion = null;
+
+  document.querySelectorAll('.course-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.course-tab.${course}`).classList.add('active');
+
+  renderSidebar();
+  renderWelcome();
+}
+
+function renderSidebar() {
+  const course = COURSES[currentCourse];
+  const cls = currentCourse;
+  const sidebar = document.getElementById('sidebar');
+
+  let html = `
+    <div class="sidebar-header">
+      <div class="sidebar-course-label">${course.code}</div>
+      <div class="sidebar-title">${course.name}</div>
+    </div>
+  `;
+
+  course.topics.forEach((topic, i) => {
+    const active = currentTopicIdx === i ? `active ${cls}` : '';
+    html += `
+      <div class="topic-group">
+        <div class="topic-week">${topic.week}</div>
+        <button class="topic-btn ${active}" onclick="selectTopic(${i})">${topic.title}</button>
+      </div>
+    `;
+  });
+
+  sidebar.innerHTML = html;
+}
+
+function renderWelcome() {
+  document.getElementById('content').innerHTML = `
+    <div class="welcome">
+      <div class="welcome-icon">∫</div>
+      <h2>Select a Topic to Begin</h2>
+      <p>Choose a topic from the sidebar to generate practice questions with full step-by-step solutions powered by AI.</p>
+    </div>
+  `;
+}
+
+function selectTopic(idx) {
+  currentTopicIdx = idx;
+  currentSubtopic = null;
+  currentQuestion = null;
+  renderSidebar();
+  renderTopicPage();
+}
+
+function renderTopicPage() {
+  const course = COURSES[currentCourse];
+  const topic = course.topics[currentTopicIdx];
+  const cls = currentCourse;
+
+  const chipsHtml = topic.subtopics.map((s, i) =>
+    `<span class="subtopic-chip ${currentSubtopic === i ? 'selected' : ''}" onclick="selectSubtopic(${i})">${s}</span>`
+  ).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="content-header">
+      <div class="topic-badge ${cls}">${course.code} · ${topic.week}</div>
+      <h1 class="topic-title">${topic.title}</h1>
+      <p class="topic-desc">${topic.desc}</p>
+    </div>
+
+    <div style="margin-bottom: 0.5rem; font-size: 14px; color: var(--text-muted); font-weight: 500;">Focus on a subtopic (optional):</div>
+    <div class="subtopics-row">${chipsHtml}</div>
+
+    <div class="controls-row">
+      <div>
+        <div style="font-size: 13px; color: var(--text-light); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">DIFFICULTY</div>
+        <div class="difficulty-group">
+          <button class="diff-btn ${currentDifficulty === 'easy' ? 'active' : ''}" onclick="setDifficulty('easy')">Easy</button>
+          <button class="diff-btn ${currentDifficulty === 'medium' ? 'active' : ''}" onclick="setDifficulty('medium')">Medium</button>
+          <button class="diff-btn ${currentDifficulty === 'hard' ? 'active' : ''}" onclick="setDifficulty('hard')">Hard</button>
+        </div>
+      </div>
+      <div style="margin-top: 22px;">
+        <button class="generate-btn" id="genBtn" onclick="generateQuestion()">
+          <span class="btn-icon">✦</span>
+          <span class="spinner"></span>
+          Generate Question
+        </button>
+      </div>
+    </div>
+
+    <div id="question-area"></div>
+  `;
+}
+
+function selectSubtopic(idx) {
+  currentSubtopic = idx;
+  renderTopicPage();
+}
+
+function setDifficulty(d) {
+  currentDifficulty = d;
+  if (currentTopicIdx !== null) renderTopicPage();
+}
+
+async function generateQuestion() {
+  if (loadingQ) return;
+  loadingQ = true;
+
+  const course = COURSES[currentCourse];
+  const topic = course.topics[currentTopicIdx];
+  const sub = currentSubtopic !== null ? topic.subtopics[currentSubtopic] : null;
+
+  const btn = document.getElementById('genBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  document.getElementById('question-area').innerHTML = `
+    <div class="streaming-indicator">
+      <div class="dots"><span></span><span></span><span></span></div>
+      Generating a ${currentDifficulty} question…
+    </div>
+  `;
+
+  const focus = sub ? `specifically about: ${sub}` : '';
+  const prompt = `You are a university math professor at the University of Belize teaching ${course.name} (${course.code}).
+
+Generate ONE ${currentDifficulty}-level practice question on the topic: "${topic.title}" ${focus}.
+
+Course context: ${topic.desc}
+
+Return your response in this exact JSON format (no markdown, no code blocks, just raw JSON):
+{
+  "question": "The complete question text. Write all math expressions using standard text notation (e.g., sin^2(x), sqrt(3), pi/4, theta, x^2+bx+c). Be specific and clear.",
+  "hint": "A brief hint that points students in the right direction without giving the answer.",
+  "difficulty": "${currentDifficulty}",
+  "concept": "The key concept this question tests"
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    currentQuestion = JSON.parse(clean);
+
+    renderQuestionCard();
+  } catch (e) {
+    document.getElementById('question-area').innerHTML = `
+      <div style="color: #c0392b; background: #fde8e8; border-radius: 8px; padding: 1rem 1.25rem;">
+        Could not generate question. Please try again.
+      </div>
+    `;
+  }
+
+  loadingQ = false;
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+
+function renderQuestionCard() {
+  const q = currentQuestion;
+  const diffClass = { easy: 'diff-easy', medium: 'diff-medium', hard: 'diff-hard' }[q.difficulty] || 'diff-medium';
+
+  document.getElementById('question-area').innerHTML = `
+    <div class="question-card">
+      <div class="qcard-header">
+        <div>
+          <div class="qcard-label">Practice Question</div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">${q.concept || ''}</div>
+        </div>
+        <span class="qcard-difficulty ${diffClass}">${q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}</span>
+      </div>
+      <div class="qcard-body">
+        <div class="question-text">${formatMath(q.question)}</div>
+        <div class="hint-box">
+          <div class="hint-label">💡 Hint</div>
+          ${q.hint}
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-bottom: 1.5rem;">
+      <button class="show-sol-btn" id="solBtn" onclick="generateSolution()">
+        ⊕ Show Step-by-Step Solution
+      </button>
+      <button class="new-q-btn" onclick="generateQuestion()">↺ New Question</button>
+    </div>
+
+    <div id="solution-area"></div>
+  `;
+}
+
+function formatMath(text) {
+  return text.replace(/`([^`]+)`/g, '<span class="math">$1</span>');
+}
+
+async function generateSolution() {
+  if (loadingS || !currentQuestion) return;
+  loadingS = true;
+
+  const btn = document.getElementById('solBtn');
+  if (btn) btn.disabled = true;
+
+  document.getElementById('solution-area').innerHTML = `
+    <div class="streaming-indicator">
+      <div class="dots"><span></span><span></span><span></span></div>
+      Working through the solution…
+    </div>
+  `;
+
+  const course = COURSES[currentCourse];
+  const topic = course.topics[currentTopicIdx];
+
+  const prompt = `You are an expert math tutor teaching ${course.name} at university level.
+
+Question: ${currentQuestion.question}
+Topic: ${topic.title}
+Difficulty: ${currentQuestion.difficulty}
+
+Provide a complete, clear step-by-step solution. Return ONLY raw JSON (no markdown, no code blocks):
+{
+  "steps": [
+    {
+      "title": "Step name",
+      "explanation": "What we are doing and why",
+      "work": "The mathematical work shown (use plain text math notation)"
+    }
+  ],
+  "answer": "The final answer in clean notation",
+  "key_concept": "One sentence explaining the key takeaway from this problem"
+}
+
+Be thorough — show all working. Each step should be clear enough for a student who is learning this topic for the first time.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const sol = JSON.parse(clean);
+
+    renderSolution(sol);
+  } catch (e) {
+    document.getElementById('solution-area').innerHTML = `
+      <div style="color: #c0392b; background: #fde8e8; border-radius: 8px; padding: 1rem 1.25rem;">
+        Could not generate solution. Please try again.
+      </div>
+    `;
+  }
+
+  loadingS = false;
+}
+
+function renderSolution(sol) {
+  const stepsHtml = sol.steps.map((step, i) => `
+    <div class="step-block">
+      <div class="step-num">${i + 1}</div>
+      <div class="step-content">
+        <div class="step-title">${step.title}</div>
+        <div class="step-text">${step.explanation}</div>
+        ${step.work ? `<div class="math-block">${step.work}</div>` : ''}
+      </div>
+    </div>
+  `).join('<hr class="divider">');
+
+  document.getElementById('solution-area').innerHTML = `
+    <div class="solution-card">
+      <div class="sol-header">
+        <div class="sol-label">Full Solution — Step by Step</div>
+      </div>
+      <div class="sol-body">
+        ${stepsHtml}
+        <div class="answer-box">
+          <div class="answer-label">Answer</div>
+          <div class="answer-value">${sol.answer}</div>
+        </div>
+        ${sol.key_concept ? `
+          <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--gold);">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light);">Key Takeaway</span>
+            <p style="margin-top: 4px; font-size: 15px; color: var(--text-main);">${sol.key_concept}</p>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Init
+renderSidebar();
+</script>
+</body>
+</html>
