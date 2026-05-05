@@ -39,7 +39,6 @@
     line-height: 1.65;
   }
 
-  /* ─── LAYOUT ──────────────────────────────── */
   .app { display: flex; flex-direction: column; min-height: 100vh; }
 
   header {
@@ -130,14 +129,12 @@
     font-family: 'Crimson Pro', serif;
   }
 
-  /* ─── MAIN CONTENT ──────────────────────────── */
   .main-wrap {
     display: flex;
     flex: 1;
     overflow: hidden;
   }
 
-  /* ─── SIDEBAR ──────────────────────────────── */
   aside {
     width: 280px;
     min-width: 280px;
@@ -222,7 +219,47 @@
     font-weight: 600;
   }
 
-  /* ─── CONTENT AREA ─────────────────────────── */
+  .api-key-bar {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: auto;
+  }
+
+  .api-key-bar label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.35);
+    font-family: 'JetBrains Mono', monospace;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .api-key-bar input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+
+  .api-key-bar input:focus { border-color: var(--gold); }
+
+  .api-key-bar .key-status {
+    font-size: 11px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .key-status.ok { color: #6fcf97; }
+  .key-status.missing { color: #f2994a; }
+
   .content {
     flex: 1;
     overflow-y: auto;
@@ -267,7 +304,6 @@
     line-height: 1.6;
   }
 
-  /* ─── SUBTOPICS ───────────────────────────── */
   .subtopics-row {
     display: flex;
     flex-wrap: wrap;
@@ -285,12 +321,12 @@
     cursor: pointer;
     transition: all 0.15s;
     font-family: 'Crimson Pro', serif;
+    user-select: none;
   }
 
   .subtopic-chip:hover { border-color: var(--gold); color: var(--text-main); }
   .subtopic-chip.selected { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
 
-  /* ─── DIFFICULTY ─────────────────────────── */
   .controls-row {
     display: flex;
     align-items: center;
@@ -353,12 +389,11 @@
     display: none;
   }
 
-  .generate-btn.loading .spinner { display: block; }
+  .generate-btn.loading .spinner { display: inline-block; }
   .generate-btn.loading .btn-icon { display: none; }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ─── QUESTION CARD ──────────────────────── */
   .question-card {
     background: #fff;
     border: 1px solid var(--border);
@@ -440,7 +475,6 @@
     margin-bottom: 3px;
   }
 
-  /* ─── SOLUTION ───────────────────────────── */
   .solution-card {
     background: #fff;
     border: 1px solid var(--border);
@@ -549,7 +583,6 @@
     color: #fff;
   }
 
-  /* ─── SHOW SOLUTION BTN ────────────────── */
   .show-sol-btn {
     display: flex;
     align-items: center;
@@ -569,7 +602,6 @@
   .show-sol-btn:hover { background: var(--navy); color: #fff; }
   .show-sol-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ─── STREAMING ──────────────────────── */
   .streaming-indicator {
     display: flex;
     align-items: center;
@@ -599,7 +631,6 @@
     40% { opacity: 1; transform: scale(1); }
   }
 
-  /* ─── WELCOME STATE ──────────────────── */
   .welcome {
     display: flex;
     flex-direction: column;
@@ -628,15 +659,11 @@
 
   .welcome p { font-size: 16px; max-width: 380px; line-height: 1.6; }
 
-  /* ─── SCROLLBAR ────────────────────── */
   aside::-webkit-scrollbar { width: 4px; }
   aside::-webkit-scrollbar-track { background: transparent; }
   aside::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
   .content::-webkit-scrollbar { width: 5px; }
   .content::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 4px; }
-
-  /* ─── FOOTER ─────────────────────── */
-  .streamed-text { white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: var(--text-main); }
 
   .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
 
@@ -659,6 +686,15 @@
   .new-q-btn:hover { border-color: var(--gold); color: var(--text-main); }
 
   hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  .error-box {
+    color: #c0392b;
+    background: #fde8e8;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
 </style>
 </head>
 <body>
@@ -710,61 +746,17 @@ const COURSES = {
     name: 'Trigonometry',
     instructor: 'Ms. Adelia Young M.Sc., M.Ed.',
     topics: [
-      {
-        week: 'Weeks 1–3', title: 'Angles & Their Measure',
-        desc: 'Types of angles, DMS notation, arc length, radian measure, and area of sector.',
-        subtopics: ['DMS Notation', 'Arc Length', 'Radian Measure', 'Area of Sector', 'Angle Conversion']
-      },
-      {
-        week: 'Weeks 2–3', title: 'Unit Circle & Trig Functions',
-        desc: 'The unit circle approach to defining trigonometric functions and computing exact values.',
-        subtopics: ['Unit Circle', 'Exact Values of sin/cos/tan', 'Special Angles (30°/45°/60°)', 'Reference Angles']
-      },
-      {
-        week: 'Week 4', title: 'Properties of Trig Functions',
-        desc: 'Domain, range, period, signs in quadrants, and fundamental identities.',
-        subtopics: ['Domain & Range', 'Period', 'Quadrant Signs', 'Fundamental Identities', 'Pythagorean Identities']
-      },
-      {
-        week: 'Weeks 5–6', title: 'Graphs of Trig Functions',
-        desc: 'Graphing sine, cosine, and other trig functions including translations.',
-        subtopics: ['Graph of Sine', 'Graph of Cosine', 'Amplitude & Period', 'Phase Shift', 'Graph of tan/cot/sec/csc']
-      },
-      {
-        week: 'Weeks 7–8', title: 'Inverse Trig Functions',
-        desc: 'Exact and approximate values of inverse trigonometric functions.',
-        subtopics: ['arcsin', 'arccos', 'arctan', 'Exact Inverse Values', 'Calculator Approximations']
-      },
-      {
-        week: 'Weeks 9–10', title: 'Trigonometric Identities',
-        desc: 'Algebraic techniques to simplify expressions and establish identities.',
-        subtopics: ['Simplifying Expressions', 'Establishing Identities', 'Reciprocal Identities', 'Co-function Identities']
-      },
-      {
-        week: 'Week 11', title: 'Sum & Difference Formulas',
-        desc: 'Exact values and identities using sum and difference formulas.',
-        subtopics: ['sin(A ± B)', 'cos(A ± B)', 'tan(A ± B)', 'Exact Values', 'Identities with Inverses']
-      },
-      {
-        week: 'Week 12', title: 'Double & Half-Angle Formulas',
-        desc: 'Applying double-angle and half-angle formulas to find exact values.',
-        subtopics: ['sin(2θ)', 'cos(2θ)', 'tan(2θ)', 'Half-Angle sin', 'Half-Angle cos']
-      },
-      {
-        week: 'Week 13', title: 'Trigonometric Equations',
-        desc: 'Solving trig equations — single function, quadratic form, and using identities.',
-        subtopics: ['Single Function Equations', 'Quadratic Form', 'Using Identities', 'General Solutions', 'Calculator Solutions']
-      },
-      {
-        week: 'Week 14', title: 'Right Triangle Trigonometry',
-        desc: 'Solving right triangles and applied problems using trig ratios.',
-        subtopics: ['SOH-CAH-TOA', 'Complementary Angle Theorem', 'Solving Right Triangles', 'Angle of Elevation/Depression']
-      },
-      {
-        week: 'Week 15', title: 'Non-Right Triangle Trigonometry',
-        desc: 'Law of Sines, Law of Cosines, and area of a triangle.',
-        subtopics: ['Law of Sines', 'Ambiguous Case (SSA)', 'Law of Cosines', 'Area of Triangle']
-      }
+      { week: 'Weeks 1–3', title: 'Angles & Their Measure', desc: 'Types of angles, DMS notation, arc length, radian measure, and area of sector.', subtopics: ['DMS Notation', 'Arc Length', 'Radian Measure', 'Area of Sector', 'Angle Conversion'] },
+      { week: 'Weeks 2–3', title: 'Unit Circle & Trig Functions', desc: 'The unit circle approach to defining trigonometric functions and computing exact values.', subtopics: ['Unit Circle', 'Exact Values of sin/cos/tan', 'Special Angles (30°/45°/60°)', 'Reference Angles'] },
+      { week: 'Week 4', title: 'Properties of Trig Functions', desc: 'Domain, range, period, signs in quadrants, and fundamental identities.', subtopics: ['Domain & Range', 'Period', 'Quadrant Signs', 'Fundamental Identities', 'Pythagorean Identities'] },
+      { week: 'Weeks 5–6', title: 'Graphs of Trig Functions', desc: 'Graphing sine, cosine, and other trig functions including translations.', subtopics: ['Graph of Sine', 'Graph of Cosine', 'Amplitude & Period', 'Phase Shift', 'Graph of tan/cot/sec/csc'] },
+      { week: 'Weeks 7–8', title: 'Inverse Trig Functions', desc: 'Exact and approximate values of inverse trigonometric functions.', subtopics: ['arcsin', 'arccos', 'arctan', 'Exact Inverse Values', 'Calculator Approximations'] },
+      { week: 'Weeks 9–10', title: 'Trigonometric Identities', desc: 'Algebraic techniques to simplify expressions and establish identities.', subtopics: ['Simplifying Expressions', 'Establishing Identities', 'Reciprocal Identities', 'Co-function Identities'] },
+      { week: 'Week 11', title: 'Sum & Difference Formulas', desc: 'Exact values and identities using sum and difference formulas.', subtopics: ['sin(A ± B)', 'cos(A ± B)', 'tan(A ± B)', 'Exact Values', 'Identities with Inverses'] },
+      { week: 'Week 12', title: 'Double & Half-Angle Formulas', desc: 'Applying double-angle and half-angle formulas to find exact values.', subtopics: ['sin(2θ)', 'cos(2θ)', 'tan(2θ)', 'Half-Angle sin', 'Half-Angle cos'] },
+      { week: 'Week 13', title: 'Trigonometric Equations', desc: 'Solving trig equations — single function, quadratic form, and using identities.', subtopics: ['Single Function Equations', 'Quadratic Form', 'Using Identities', 'General Solutions', 'Calculator Solutions'] },
+      { week: 'Week 14', title: 'Right Triangle Trigonometry', desc: 'Solving right triangles and applied problems using trig ratios.', subtopics: ['SOH-CAH-TOA', 'Complementary Angle Theorem', 'Solving Right Triangles', 'Angle of Elevation/Depression'] },
+      { week: 'Week 15', title: 'Non-Right Triangle Trigonometry', desc: 'Law of Sines, Law of Cosines, and area of a triangle.', subtopics: ['Law of Sines', 'Ambiguous Case (SSA)', 'Law of Cosines', 'Area of Triangle'] }
     ]
   },
   alg: {
@@ -772,66 +764,18 @@ const COURSES = {
     name: 'Algebra',
     instructor: 'Jenny Olivas',
     topics: [
-      {
-        week: 'Week 1', title: 'Indices & Logarithms',
-        desc: 'Laws of indices, introduction to logarithms, and scientific notation.',
-        subtopics: ['Laws of Indices', 'Negative & Zero Exponents', 'Logarithms (intro)', 'Scientific Notation']
-      },
-      {
-        week: 'Week 2', title: 'Surds & Radicals',
-        desc: 'nth roots, fractional exponents, simplifying radicals, and rationalizing denominators.',
-        subtopics: ['nth Roots', 'Fractional Exponents', 'Simplifying Radicals', 'Rationalizing Denominators']
-      },
-      {
-        week: 'Week 3', title: 'Polynomials',
-        desc: 'Degree, arithmetic operations, special products, long/synthetic division, and theorems.',
-        subtopics: ['Adding & Subtracting', 'Multiplying & FOIL', 'Long Division', 'Synthetic Division', 'Factor Theorem', 'Remainder Theorem']
-      },
-      {
-        week: 'Weeks 4–5', title: 'Factorization',
-        desc: 'HCF, grouping, difference/sum of cubes, and trinomial factoring.',
-        subtopics: ['HCF', 'Factor by Grouping', 'Difference of Squares', 'Sum & Difference of Cubes', 'Trinomials (a=1)', 'Trinomials (a≠1)', 'Double Factorization']
-      },
-      {
-        week: 'Week 6', title: 'Rational Expressions',
-        desc: 'Simplifying, multiplying, dividing, adding, subtracting, and complex fractions.',
-        subtopics: ['Simplify to Lowest Terms', 'Multiply & Divide', 'Add & Subtract', 'Complex Fractions']
-      },
-      {
-        week: 'Week 7', title: 'Partial Fraction Decomposition',
-        desc: 'Decompose rational expressions with linear and quadratic factors.',
-        subtopics: ['Nonrepeated Linear Factors', 'Repeated Linear Factors', 'Irreducible Quadratic Factors']
-      },
-      {
-        week: 'Weeks 8–9', title: 'Equations',
-        desc: 'Linear, quadratic, complex numbers, radical, and higher-order equations.',
-        subtopics: ['Linear Equations', 'Quadratic Equations', 'Discriminant', 'Absolute Value Equations', 'Radical Equations', 'Equations in Quadratic Form']
-      },
-      {
-        week: 'Week 10', title: 'Inequalities',
-        desc: 'Solving and graphing linear, quadratic, and absolute value inequalities.',
-        subtopics: ['Linear Inequalities', 'Quadratic Inequalities', 'Absolute Value Inequalities', 'Interval Notation']
-      },
-      {
-        week: 'Week 11', title: 'Simultaneous Equations',
-        desc: 'Systems of equations in two and three variables.',
-        subtopics: ['2-Variable Systems', '3-Variable Systems', 'Substitution Method', 'Elimination Method']
-      },
-      {
-        week: 'Week 12', title: 'Functions',
-        desc: 'Function properties, operations, and finding inverse functions.',
-        subtopics: ['Domain & Range', 'Function Notation', 'Operations on Functions', 'Inverse Functions', 'Proof of Inverses']
-      },
-      {
-        week: 'Weeks 13–14', title: 'Graphing Functions',
-        desc: 'Graphing linear, quadratic, absolute value, square root, polynomial, and rational functions.',
-        subtopics: ['Linear & Quadratic', 'Absolute Value', 'Square Root', 'Exponential', 'Polynomial', 'Rational Functions & Asymptotes']
-      },
-      {
-        week: 'Weeks 15–16', title: 'Conics & Piecewise',
-        desc: 'Circle, ellipse, hyperbola, and piecewise-defined functions.',
-        subtopics: ['Circle', 'Ellipse', 'Hyperbola', 'Piecewise Functions']
-      }
+      { week: 'Week 1', title: 'Indices & Logarithms', desc: 'Laws of indices, introduction to logarithms, and scientific notation.', subtopics: ['Laws of Indices', 'Negative & Zero Exponents', 'Logarithms (intro)', 'Scientific Notation'] },
+      { week: 'Week 2', title: 'Surds & Radicals', desc: 'nth roots, fractional exponents, simplifying radicals, and rationalizing denominators.', subtopics: ['nth Roots', 'Fractional Exponents', 'Simplifying Radicals', 'Rationalizing Denominators'] },
+      { week: 'Week 3', title: 'Polynomials', desc: 'Degree, arithmetic operations, special products, long/synthetic division, and theorems.', subtopics: ['Adding & Subtracting', 'Multiplying & FOIL', 'Long Division', 'Synthetic Division', 'Factor Theorem', 'Remainder Theorem'] },
+      { week: 'Weeks 4–5', title: 'Factorization', desc: 'HCF, grouping, difference/sum of cubes, and trinomial factoring.', subtopics: ['HCF', 'Factor by Grouping', 'Difference of Squares', 'Sum & Difference of Cubes', 'Trinomials (a=1)', 'Trinomials (a≠1)', 'Double Factorization'] },
+      { week: 'Week 6', title: 'Rational Expressions', desc: 'Simplifying, multiplying, dividing, adding, subtracting, and complex fractions.', subtopics: ['Simplify to Lowest Terms', 'Multiply & Divide', 'Add & Subtract', 'Complex Fractions'] },
+      { week: 'Week 7', title: 'Partial Fraction Decomposition', desc: 'Decompose rational expressions with linear and quadratic factors.', subtopics: ['Nonrepeated Linear Factors', 'Repeated Linear Factors', 'Irreducible Quadratic Factors'] },
+      { week: 'Weeks 8–9', title: 'Equations', desc: 'Linear, quadratic, complex numbers, radical, and higher-order equations.', subtopics: ['Linear Equations', 'Quadratic Equations', 'Discriminant', 'Absolute Value Equations', 'Radical Equations', 'Equations in Quadratic Form'] },
+      { week: 'Week 10', title: 'Inequalities', desc: 'Solving and graphing linear, quadratic, and absolute value inequalities.', subtopics: ['Linear Inequalities', 'Quadratic Inequalities', 'Absolute Value Inequalities', 'Interval Notation'] },
+      { week: 'Week 11', title: 'Simultaneous Equations', desc: 'Systems of equations in two and three variables.', subtopics: ['2-Variable Systems', '3-Variable Systems', 'Substitution Method', 'Elimination Method'] },
+      { week: 'Week 12', title: 'Functions', desc: 'Function properties, operations, and finding inverse functions.', subtopics: ['Domain & Range', 'Function Notation', 'Operations on Functions', 'Inverse Functions', 'Proof of Inverses'] },
+      { week: 'Weeks 13–14', title: 'Graphing Functions', desc: 'Graphing linear, quadratic, absolute value, square root, exponential, polynomial, and rational functions.', subtopics: ['Linear & Quadratic', 'Absolute Value', 'Square Root', 'Exponential', 'Polynomial', 'Rational Functions & Asymptotes'] },
+      { week: 'Weeks 15–16', title: 'Conics & Piecewise', desc: 'Circle, ellipse, hyperbola, and piecewise-defined functions.', subtopics: ['Circle', 'Ellipse', 'Hyperbola', 'Piecewise Functions'] }
     ]
   }
 };
@@ -843,6 +787,9 @@ let currentDifficulty = 'medium';
 let currentQuestion = null;
 let loadingQ = false;
 let loadingS = false;
+
+// Store API key in memory (not localStorage for safety)
+const apiKey = 'YOUR_API_KEY_HERE'; // ← PASTE YOUR ANTHROPIC API KEY HERE
 
 function switchCourse(course) {
   currentCourse = course;
@@ -878,6 +825,18 @@ function renderSidebar() {
       </div>
     `;
   });
+
+  // Add API key status at bottom of sidebar
+  const keyDisplay = apiKey && apiKey.length > 10 && apiKey !== 'YOUR_API_KEY_HERE'
+    ? `<div class="key-status ok">✓ API key set</div>`
+    : `<div class="key-status missing">⚠ Set API key in script</div>`;
+
+  html += `
+    <div class="api-key-bar">
+      <label>Anthropic API Key</label>
+      ${keyDisplay}
+    </div>
+  `;
 
   sidebar.innerHTML = html;
 }
@@ -951,6 +910,36 @@ function setDifficulty(d) {
   if (currentTopicIdx !== null) renderTopicPage();
 }
 
+async function callAnthropic(prompt) {
+  const key = apiKey;
+  if (!key || key === 'YOUR_API_KEY_HERE' || key.length < 10) {
+    throw new Error('Please set your Anthropic API key in the script (line ~180). Get one at https://console.anthropic.com');
+  }
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  if (!response.ok) {
+    let detail = `HTTP ${response.status}`;
+    try { const e = await response.json(); detail = e.error?.message || JSON.stringify(e); } catch {}
+    throw new Error(detail);
+  }
+
+  return await response.json();
+}
+
 async function generateQuestion() {
   if (loadingQ) return;
   loadingQ = true;
@@ -960,8 +949,7 @@ async function generateQuestion() {
   const sub = currentSubtopic !== null ? topic.subtopics[currentSubtopic] : null;
 
   const btn = document.getElementById('genBtn');
-  btn.classList.add('loading');
-  btn.disabled = true;
+  if (btn) { btn.classList.add('loading'); btn.disabled = true; }
 
   document.getElementById('question-area').innerHTML = `
     <div class="streaming-indicator">
@@ -970,10 +958,10 @@ async function generateQuestion() {
     </div>
   `;
 
-  const focus = sub ? `specifically about: ${sub}` : '';
+  const focus = sub ? ` specifically about: ${sub}` : '';
   const prompt = `You are a university math professor at the University of Belize teaching ${course.name} (${course.code}).
 
-Generate ONE ${currentDifficulty}-level practice question on the topic: "${topic.title}" ${focus}.
+Generate ONE ${currentDifficulty}-level practice question on the topic: "${topic.title}"${focus}.
 
 Course context: ${topic.desc}
 
@@ -986,37 +974,28 @@ Return your response in this exact JSON format (no markdown, no code blocks, jus
 }`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await resp.json();
-    const text = data.content.map(b => b.text || '').join('');
+    const data = await callAnthropic(prompt);
+    const text = data.content.map(b => b.text || b || '').join('');
     const clean = text.replace(/```json|```/g, '').trim();
     currentQuestion = JSON.parse(clean);
-
     renderQuestionCard();
   } catch (e) {
     document.getElementById('question-area').innerHTML = `
-      <div style="color: #c0392b; background: #fde8e8; border-radius: 8px; padding: 1rem 1.25rem;">
-        Could not generate question. Please try again.
+      <div class="error-box">
+        <strong>Could not generate question.</strong><br>
+        ${e.message || 'Please try again.'}
       </div>
     `;
+    console.error('Generate error:', e);
   }
 
   loadingQ = false;
-  btn.classList.remove('loading');
-  btn.disabled = false;
+  if (btn) { btn.classList.remove('loading'); btn.disabled = false; }
 }
 
 function renderQuestionCard() {
   const q = currentQuestion;
+  if (!q) return;
   const diffClass = { easy: 'diff-easy', medium: 'diff-medium', hard: 'diff-hard' }[q.difficulty] || 'diff-medium';
 
   document.getElementById('question-area').innerHTML = `
@@ -1049,6 +1028,7 @@ function renderQuestionCard() {
 }
 
 function formatMath(text) {
+  if (!text) return '';
   return text.replace(/`([^`]+)`/g, '<span class="math">$1</span>');
 }
 
@@ -1091,34 +1071,32 @@ Provide a complete, clear step-by-step solution. Return ONLY raw JSON (no markdo
 Be thorough — show all working. Each step should be clear enough for a student who is learning this topic for the first time.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await resp.json();
-    const text = data.content.map(b => b.text || '').join('');
+    const data = await callAnthropic(prompt);
+    const text = data.content.map(b => b.text || b || '').join('');
     const clean = text.replace(/```json|```/g, '').trim();
     const sol = JSON.parse(clean);
-
     renderSolution(sol);
   } catch (e) {
     document.getElementById('solution-area').innerHTML = `
-      <div style="color: #c0392b; background: #fde8e8; border-radius: 8px; padding: 1rem 1.25rem;">
-        Could not generate solution. Please try again.
+      <div class="error-box">
+        <strong>Could not generate solution.</strong><br>
+        ${e.message || 'Please try again.'}
       </div>
     `;
+    console.error('Solution error:', e);
   }
 
   loadingS = false;
+  const btn2 = document.getElementById('solBtn');
+  if (btn2) btn2.disabled = false;
 }
 
 function renderSolution(sol) {
+  if (!sol || !sol.steps) {
+    document.getElementById('solution-area').innerHTML = `<div class="error-box">Invalid solution format received.</div>`;
+    return;
+  }
+
   const stepsHtml = sol.steps.map((step, i) => `
     <div class="step-block">
       <div class="step-num">${i + 1}</div>
